@@ -1,3 +1,7 @@
+const express = require('express');
+const app = express();
+const asyncHandler = require('express-async-handler')
+
 const bb = require('./indicators/bollinger_band.js')
 const ema = require('./indicators/ema.js')
 const ichimokuCloud = require('./indicators/ichimoku.js')
@@ -24,53 +28,94 @@ module.exports = {
     ticker: ticker,
     wma: wma,
 }
+const EXCHANGE = 'binance';
 
-// examples for testing
-const main = async () => {
-    try {
-        console.log("RSI 14 on Binance BTC/USDT 15m")
-        console.log(await rsi(14, "close", "binance", "BTC/USDT", "15m", true))
+app.get('/', function (req, res) {
+    res.send('App on');
+});
 
-        console.log("SMA 8 on Binance BTC/USDT 15m")
-        let smaData = await sma(8, "close", "binance", "BTC/USDT", "15m", true)
-        console.log(smaData[smaData.length - 1])
+app.get('/stochasticRSI/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = await stochasticRSI(3, 3, 14, 14, 'close', EXCHANGE, symbol, false);
+    res.send(data);
+}));
 
-        console.log("Bollinger bands 50, 2 on Binance BTC/USDT 15m")
-        let bbData = await bb(50, 2, "close", "binance", "BTC/USDT", "15m", true)
-        console.log(bbData[bbData.length - 2])
+app.get('/sma/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    let data = await sma(8, "close", EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
 
-        console.log("MACD 12 26 9 on Binance BTC/USDT 15m")
-        let macdData = await macd(12, 26, 9, "close", "binance", "BTC/USDT", "15m", true)
-        console.log(macdData[macdData.length - 2])
+app.get('/rsi/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(14, req.params.quote_symbol);
+    let data = await rsi(rsiLength, "close", EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
 
-        console.log("Stochastic RSI example")
-        console.log(await stochasticRSI(3, 3, 14, 14, 'close', 'binance', 'BTC/USDT', '1h', false))
+app.get('/bb/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = await bb(50, 2, "close", EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
+
+app.get('/macd/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = await macd(12, 26, 9, "close", EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
+
+app.get('/ichimokuCloud/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = await ichimokuCloud(9, 26, 52, 26, EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
+
+app.get('/goldenCross/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = await alerts.goldenCross(50, 200, EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
+
+app.get('/maCross/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = await alerts.maCross(50, 200, EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
+
+app.get('/rsiCheck/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = alerts.rsiCheck(14, 75, 25, EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
+
+app.get('/priceCrossSMA/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = await alerts.priceCrossSMA(14, EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
+
+app.get('/priceCrossEMA/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = await alerts.priceCrossEMA(14, EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
+
+app.get('/bbCheck/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+    let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
+    const data = awaitalerts.bbCheck(50, 2, EXCHANGE, symbol, req.params.interval, true);
+    res.send(data);
+}));
 
 
-        console.log("IchimokuCloud  example")
-        console.log(await ichimokuCloud(9, 26, 52, 26, 'binance', 'BTC/USDT', '1h', false))
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`App listening on port ${PORT}`);
+    console.log('Press Ctrl+C to quit.');
+});
 
-        console.log("Test golden cross")
-        console.log(await alerts.goldenCross(50, 200, 'binance', 'BTC/USDT', '1h', false))
 
-	console.log("Test MA cross")
-        console.log(await alerts.maCross(50, 200, 'binance', 'BTC/USDT', '1h', false))
-
-	console.log("Test RSIcheck")
-        console.log(await alerts.rsiCheck(14, 75, 25, 'binance', 'BTC/USDT', '1h', false))
-
-	console.log("Test SMA cross")
-	console.log(await alerts.priceCrossSMA(14, 'binance', 'BTC/USDT', '1h', false))
-
-        console.log("Test EMA cross")
-        console.log(await alerts.priceCrossEMA(14, 'binance', 'BTC/USDT', '1h', false))
-
-        console.log("Test break out BB")
-        console.log(await alerts.bbCheck(50, 2, 'binance', 'BTC/USDT', '1h', false))
-
-    } catch (err) {
-        console.log(err)
-    }
-
+function setSymbol(base, quote) {
+    return base + '/' + quote;
 }
+
 //main()

@@ -12,11 +12,25 @@
         "url": "git+https://github.com/thanhnguyennguyen/trading-indicator.git"
     },
     "keywords": [
-        "trading",
-        "indicators",
-        "technicalindicators",
-        "nguyennguyen",
-        "ccxt", "exchange", "cryptocurrency", "binance", "bitstamp", "coinbase", "bittrex", "houbipro", "kraken", "binanceus", "bitforex", "bitfinex", "bitmex", "gemini", "okex"
+      "trading",
+      "indicators",
+      "technicalindicators",
+      "nguyennguyen",
+      "ccxt",
+      "exchange",
+      "cryptocurrency",
+      "binance",
+      "bitstamp",
+      "coinbase",
+      "bittrex",
+      "houbipro",
+      "kraken",
+      "binanceus",
+      "bitforex",
+      "bitfinex",
+      "bitmex",
+      "gemini",
+      "okex"
     ],
     "author": "NguyenNguyen (nguyenbk92@gmail.com)",
     "license": "ISC",
@@ -25,7 +39,9 @@
     },
     "homepage": "https://github.com/thanhnguyennguyen/trading-indicator#readme",
     "dependencies": {
-        "ccxt": "^1.22.7",
-        "technicalindicators": "^3.0.0"
+      "ccxt": "^1.22.7",
+      "express": "^4.17.1",
+      "express-async-handler": "^1.1.4",
+      "technicalindicators": "^3.0.0"
     }
 }
