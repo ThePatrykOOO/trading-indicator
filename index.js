@@ -36,7 +36,7 @@ app.get('/', function (req, res) {
 
 app.get('/stochasticRSI/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
     let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
-    const data = await stochasticRSI(3, 3, 14, 14, 'close', EXCHANGE, symbol, false);
+    const data = await stochasticRSI(3, 3, 14, 14, 'close', EXCHANGE, symbol, req.params.interval, false);
     res.send(data);
 }));
 
