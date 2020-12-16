@@ -40,9 +40,10 @@ app.get('/stochasticRSI/:base_symbol/:quote_symbol/:interval', asyncHandler(asyn
     res.send(data);
 }));
 
-app.get('/sma/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+app.get('/sma/:base_symbol/:quote_symbol/:interval/:sma_length?', asyncHandler(async (req, res, next) => {
     let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
-    let data = await sma(8, "close", EXCHANGE, symbol, req.params.interval, true);
+    let smaLength = req.params.sma_length !== undefined ? req.params.sma_length : 50;
+    let data = await sma(smaLength, "close", EXCHANGE, symbol, req.params.interval, true);
     res.send(data);
 }));
 
