@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const asyncHandler = require('express-async-handler')
+const serverless = require("serverless-http");
 
 const bb = require('./indicators/bollinger_band.js')
 const ema = require('./indicators/ema.js')
@@ -113,6 +114,9 @@ app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
     console.log('Press Ctrl+C to quit.');
 });
+
+module.exports = app;
+module.exports.handler = serverless(app);
 
 
 function setSymbol(base, quote) {
