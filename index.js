@@ -118,5 +118,3 @@ app.listen(PORT, () => {
 function setSymbol(base, quote) {
     return base + '/' + quote;
 }
-
-//main()
