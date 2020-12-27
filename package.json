@@ -2,10 +2,9 @@
     "name": "trading-indicator",
     "version": "1.0.4-beta",
     "description": "provide trading technical indicator values",
-    "main": "src/index.js",
+    "main": "index.js",
     "scripts": {
-        "start": "node_modules/.bin/netlify-lambda serve src",
-        "build": "NODE_ENV=production ./node_modules/.bin/netlify-lambda build src",
+        "start": "echo example to fetch data from binance && node index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -43,8 +42,6 @@
         "ccxt": "^1.22.7",
         "express": "^4.17.1",
         "express-async-handler": "^1.1.4",
-        "netlify-lambda": "^2.0.2",
-        "serverless-http": "^2.6.0",
         "technicalindicators": "^3.0.0"
     }
 }
