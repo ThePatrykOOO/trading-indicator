@@ -47,9 +47,10 @@ app.get('/sma/:base_symbol/:quote_symbol/:interval/:sma_length?', asyncHandler(a
     res.send(data);
 }));
 
-app.get('/rsi/:base_symbol/:quote_symbol/:interval', asyncHandler(async (req, res, next) => {
+app.get('/rsi/:base_symbol/:quote_symbol/:interval/:rsi_length?', asyncHandler(async (req, res, next) => {
     let symbol = setSymbol(req.params.base_symbol, req.params.quote_symbol);
-    let data = await rsi(14, "close", EXCHANGE, symbol, req.params.interval, true);
+    let rsiLength = req.params.rsi_length !== undefined ? req.params.rsi_length : 14;
+    let data = await rsi(rsiLength, "close", EXCHANGE, symbol, req.params.interval, true);
     res.send(data);
 }));
 
